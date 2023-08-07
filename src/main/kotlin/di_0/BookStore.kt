@@ -6,12 +6,16 @@ import Owner
 import java.io.File
 import java.sql.DriverManager
 
-class BookStore {
+class BookStore(firstname: String, lastname: String) {
 
-    val owner = Owner("Franz", "Kafka")
+    val owner = Owner(firstname, lastname)
 
     fun getBooks(): List<Book> {
-        return retrieveBooks_manual()
+        if(owner.getLastName() == "Kafka")
+            return retrieveBooks_manual()
+        if(owner.getLastName() == "Christie")
+            return retrieveBooks_filesystem()
+        return retrieveBooks_database(owner)
     }
 
     fun getCustomers(): List<Customer> {
@@ -29,11 +33,11 @@ class BookStore {
         return books
     }
 
-    fun retrieveBooks_database(): List<Book> {
+    fun retrieveBooks_database(owner: Owner): List<Book> {
         val books = mutableListOf<Book>()
         val connection = DriverManager
             .getConnection("jdbc:postgresql://localhost:5432/example", "admin", "admin")
-        val result = connection.prepareStatement("SELECT * FROM books").executeQuery()
+        val result = connection.prepareStatement("SELECT * FROM books WHERE owner LIKE $owner.getLastname()").executeQuery()
         while(result.next()){
             val name = result.getString("name")
             val author = result.getString("author")

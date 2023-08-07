@@ -5,13 +5,16 @@ import Customer
 import Owner
 
 class Main {
-    fun main() {
-        val bookStore = BookStore(
-            Owner("Franz", "Kafka"),
-            Bookshelf(),
-            Contracts()
-        )
-        println(bookStore.getBooks())
-        println(bookStore.getCustomers())
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val bookStore = BookStore(
+                Owner("Franz", "Kafka"),
+                Bookshelf(),
+                Contracts()
+            )
+            println("Books: ${bookStore.getBooks()}")
+            println("Customers: ${bookStore.getCustomers()}")
+        }
     }
 }
